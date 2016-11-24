@@ -1,10 +1,12 @@
 language: generic
+dist: trusty
 sudo: required
 addons:
   apt:
     sources:
       - ubuntu-toolchain-r-test
     packages:
+      - npm
       - gcc-4.8
       - g++-4.8
       - cabal-install
