@@ -7,7 +7,7 @@ die () { echo "$@" ; cleanup ; exit 1; }
 
 \. ../../../nvm.sh
 
-set -ex
+set -e
 
 nvm_compute_checksum() {
   echo

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -ex
+set -e
 
 die () { echo "$@" ; cleanup ; exit 1; }
 
@@ -42,7 +42,7 @@ EXPECTED_OUTPUT='NVM_VERSION_ONLY:true,NVM_LTS:*,PATTERN:'
 
 set +ex # needed for stderr
 OUTPUT="$(nvm version-remote --foo bar 2>&1)"
-set -ex
+set -e
 EXPECTED_OUTPUT='Unsupported option "--foo".'
 EXIT_CODE="$(nvm version-remote --foo bar >/dev/null 2>&1 && echo $? || echo $?)"
 [ "${EXIT_CODE}" = 55 ] || die "\`nvm version-remote --foo bar\` did not exit with code 55, got >${EXIT_CODE}<"

@@ -16,7 +16,7 @@ cleanup() {
 
 \. ../../../nvm.sh
 
-set -ex
+set -e
 
 MOCKS_DIR="$PWD/mocks"
 
