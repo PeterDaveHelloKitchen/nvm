@@ -113,6 +113,7 @@ nvm_download() {
                             -e 's/-L //' \
                             -e 's/-I /--server-response /' \
                             -e 's/-s /-q /' \
+                            -e 's/-sS /-nv /' \
                             -e 's/-o /-O /' \
                             -e 's/-C - /-c /')
     # shellcheck disable=SC2086
@@ -1698,9 +1699,15 @@ nvm_install_binary() {
   local TMPDIR
   local VERSION_PATH
 
+  local PROGRESS_BAR
   local NODE_OR_IOJS
   if [ "${FLAVOR}" = 'node' ]; then
     NODE_OR_IOJS="${FLAVOR}"
+  fi
+  if [ -n "${NVM_NO_PROGRESS}" ]; then
+    PROGRESS_BAR="-sS"
+  else
+    PROGRESS_BAR="--progress-bar"
   fi
   nvm_echo "Downloading and installing ${NODE_OR_IOJS-} ${VERSION}..."
   TARBALL="$(nvm_download_artifact "${FLAVOR}" binary "${TYPE-}" "${VERSION}" | command tail -1)"
@@ -1860,7 +1867,7 @@ nvm_download_artifact() {
     command rm -rf "${TARBALL}"
   fi
   nvm_err "Downloading ${TARBALL_URL}..."
-  nvm_download -L -C - --progress-bar "${TARBALL_URL}" -o "${TARBALL}" || (
+  nvm_download -L -C - "${PROGRESS_BAR}" "${TARBALL_URL}" -o "${TARBALL}" || (
     command rm -rf "${TARBALL}" "${tmpdir}"
     nvm_err "Binary download from ${TARBALL_URL} failed, trying source."
     return 4
@@ -2007,6 +2014,11 @@ nvm_install_source() {
   local TMPDIR
   local VERSION_PATH
 
+  if [ -n "${NVM_NO_PROGRESS}" ]; then
+    PROGRESS_BAR="-sS"
+  else
+    PROGRESS_BAR="--progress-bar"
+  fi
   TARBALL="$(nvm_download_artifact "${FLAVOR}" source "${TYPE}" "${VERSION}" | command tail -1)" && \
   [ -f "${TARBALL}" ] && \
   TMPDIR="$(dirname "${TARBALL}")/files" && \
@@ -2464,6 +2476,7 @@ nvm() {
       fi
 
       local nobinary
+      local noprogress
       nobinary=0
       local LTS
       local NVM_UPGRADE_NPM
@@ -2479,6 +2492,10 @@ nvm() {
             shift # consume "-j"
             nvm_get_make_jobs "$1"
             shift # consume job count
+          ;;
+          --no-progress)
+            noprogress=1
+            shift
           ;;
           --lts)
             LTS='*'
@@ -2688,7 +2705,7 @@ nvm() {
 
         # skip binary install if "nobinary" option specified.
         if [ $nobinary -ne 1 ] && nvm_binary_available "$VERSION"; then
-          nvm_install_binary "${FLAVOR}" std "${VERSION}"
+          NVM_NO_PROGRESS="${NVM_NO_PROGRESS:-${noprogress}}" nvm_install_binary "${FLAVOR}" std "${VERSION}"
           EXIT_CODE=$?
         fi
         if [ "$EXIT_CODE" -ne 0 ]; then
@@ -2696,7 +2713,7 @@ nvm() {
             nvm_get_make_jobs
           fi
 
-          nvm_install_source "${FLAVOR}" std "${VERSION}" "${NVM_MAKE_JOBS}" "${ADDITIONAL_PARAMETERS}"
+          NVM_NO_PROGRESS="${NVM_NO_PROGRESS:-${noprogress}}" nvm_install_source "${FLAVOR}" std "${VERSION}" "${NVM_MAKE_JOBS}" "${ADDITIONAL_PARAMETERS}"
           EXIT_CODE=$?
         fi
 
