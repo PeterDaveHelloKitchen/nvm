@@ -57,10 +57,18 @@ nvm_has_colors() {
   [ "${NVM_COLORS:--1}" -ge 8 ]
 }
 
+nvm_curl_libz_support() {
+  curl -V | grep "^Features:" | grep -q "libz"
+}
+
 nvm_get_latest() {
   local NVM_LATEST_URL
+  local CURL_COMPRESSED_FLAG
+  if nvm_curl_libz_support; then
+    CURL_COMPRESSED_FLAG="--compressed"
+  fi
   if nvm_has "curl"; then
-    NVM_LATEST_URL="$(curl --compressed -q -w "%{url_effective}\n" -L -s -S http://latest.nvm.sh -o /dev/null)"
+    NVM_LATEST_URL="$(curl "${CURL_COMPRESSED_FLAG:-}" -q -w "%{url_effective}\n" -L -s -S http://latest.nvm.sh -o /dev/null)"
   elif nvm_has "wget"; then
     NVM_LATEST_URL="$(wget http://latest.nvm.sh --server-response -O /dev/null 2>&1 | command awk '/^  Location: /{DEST=$2} END{ print DEST }')"
   else
@@ -75,8 +83,12 @@ nvm_get_latest() {
 }
 
 nvm_download() {
+  local CURL_COMPRESSED_FLAG
+  if nvm_curl_libz_support; then
+    CURL_COMPRESSED_FLAG="--compressed"
+  fi
   if nvm_has "curl"; then
-    curl --compressed -q "$@"
+    curl "${CURL_COMPRESSED_FLAG:-}" -q "$@"
   elif nvm_has "wget"; then
     # Emulate curl with wget
     ARGS=$(nvm_echo "$@" | command sed -e 's/--progress-bar /--progress=bar /' \
