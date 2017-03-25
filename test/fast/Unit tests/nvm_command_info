@@ -21,6 +21,8 @@ unset WGET_EXPECTED_INFO WGET_COMMAND_INFO
 
 
 # 2. test aliased wget
+shopt -s expand_aliases
+# enable expand_aliases to make alias working in interactive shell
 alias wget="wget -V"
 WGET_COMMAND_INFO="$(nvm_command_info wget)"
 WGET_EXPECTED_INFO="$(which wget) (wget -V)"
