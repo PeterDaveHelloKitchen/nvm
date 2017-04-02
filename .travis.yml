@@ -1,15 +1,4 @@
 language: generic
-dist: trusty
-sudo: required
-addons:
-  apt:
-    packages:
-      - cabal-install
-      - zsh
-    #  - ksh
-    #  - gcc-4.8
-    #  - g++-4.8
-
 cache:
   directories:
     - $HOME/.npm
@@ -21,15 +10,36 @@ before_install:
   - $SHELL --version 2> /dev/null || dpkg -s $SHELL 2> /dev/null || which $SHELL
   - curl --version
   - wget --version
-install:
-  - if [ -n "${SHELLCHECK-}" ]; then cabal update && cabal install ShellCheck && shellcheck --version ; fi
-  - if [ -z "${SHELLCHECK-}" ]; then nvm install node && npm install && npm prune && npm ls urchin doctoc; fi
-  - '[ -z "$WITHOUT_CURL" ] || sudo apt-get remove curl -y'
+
 script:
   - if [ -n "${DOCTOCCHECK-}" ]; then cp README.markdown README.markdown.orig && npm run doctoc && diff -q README.markdown README.markdown.orig ; fi
   - if [ -n "${SHELLCHECK-}" ]; then shellcheck -s bash nvm.sh && shellcheck -s sh nvm.sh && shellcheck -s dash nvm.sh && shellcheck -s ksh nvm.sh ; fi
   - if [ -n "${SHELLCHECK-}" ]; then shellcheck -s bash install.sh bash_completion nvm-exec ; fi
   - if [ -n "${SHELL-}" ] && [ -n "${TEST_SUITE}" ]; then make TEST_SUITE=$TEST_SUITE URCHIN="$(npm bin)/urchin" test-$SHELL ; fi
+
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: required
+      addons:
+        apt:
+          packages:
+            - cabal-install
+            - zsh
+          #  - ksh
+          #  - gcc-4.8
+          #  - g++-4.8
+      install:
+        - if [ -n "${SHELLCHECK-}" ]; then cabal update && cabal install ShellCheck && shellcheck --version ; fi
+        - if [ -z "${SHELLCHECK-}" ]; then nvm install node && npm install && npm prune && npm ls urchin doctoc; fi
+        - '[ -z "$WITHOUT_CURL" ] || sudo apt-get remove curl -y'
+    - os: osx
+      osx_image: xcode8.3
+      install:
+      - if [ -n "${SHELLCHECK-}" ]; then brew update && brew install shellcheck && shellcheck --version ; fi
+      - if [ -z "${SHELLCHECK-}" ]; then nvm install node && npm install && npm prune && npm ls urchin doctoc; fi
+
 env:
   global:
     - CXX=g++-4.8
