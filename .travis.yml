@@ -23,7 +23,6 @@ before_install:
   - curl --version
   - wget --version
 install:
-  - if [ -n "${SHELLCHECK-}" ]; then cabal update && cabal install ShellCheck && shellcheck --version ; fi
   - if [ -z "${SHELLCHECK-}" ]; then nvm install node && npm install && npm prune && npm ls urchin doctoc; fi
   - '[ -z "$WITHOUT_CURL" ] || sudo apt-get remove curl -y'
 script:
