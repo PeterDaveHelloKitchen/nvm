@@ -37,43 +37,63 @@ env:
     - CC=gcc-4.8
     - PATH="$(echo $PATH | sed 's/::/:/')"
     - NVM_DIR="${TRAVIS_BUILD_DIR}"
-  matrix:
-    - MAKE_RELEASE=true
-    - DOCTOCCHECK=true
-    - SHELLCHECK=true
-    - SHELL=bash TEST_SUITE=install_script
-    - SHELL=sh TEST_SUITE=fast
-    - SHELL=dash TEST_SUITE=fast
-    - SHELL=bash TEST_SUITE=fast
-    - SHELL=zsh TEST_SUITE=fast
-  #  - SHELL=ksh TEST_SUITE=fast
-    - SHELL=sh TEST_SUITE=sourcing
-    - SHELL=dash TEST_SUITE=sourcing
-    - SHELL=bash TEST_SUITE=sourcing
-    - SHELL=zsh TEST_SUITE=sourcing
-  #  - SHELL=ksh TEST_SUITE=sourcing
-    - SHELL=sh TEST_SUITE=slow
-    - SHELL=dash TEST_SUITE=slow
-    - SHELL=bash TEST_SUITE=slow
-    - SHELL=zsh TEST_SUITE=slow
-  #  - SHELL=ksh TEST_SUITE=slow
-    - SHELL=sh TEST_SUITE=installation_node
-    - SHELL=sh TEST_SUITE=installation_node WITHOUT_CURL=1
-    - SHELL=dash TEST_SUITE=installation_node
-    - SHELL=dash TEST_SUITE=installation_node WITHOUT_CURL=1
-    - SHELL=bash TEST_SUITE=installation_node
-    - SHELL=bash TEST_SUITE=installation_node WITHOUT_CURL=1
-    - SHELL=zsh TEST_SUITE=installation_node
-    - SHELL=zsh TEST_SUITE=installation_node WITHOUT_CURL=1
-  #  - SHELL=ksh TEST_SUITE=installation_node
-  #  - SHELL=ksh TEST_SUITE=installation_node WITHOUT_CURL=1
-    - SHELL=sh TEST_SUITE=installation_iojs
-    - SHELL=sh TEST_SUITE=installation_iojs WITHOUT_CURL=1
-    - SHELL=dash TEST_SUITE=installation_iojs
-    - SHELL=dash TEST_SUITE=installation_iojs WITHOUT_CURL=1
-    - SHELL=bash TEST_SUITE=installation_iojs
-    - SHELL=bash TEST_SUITE=installation_iojs WITHOUT_CURL=1
-    - SHELL=zsh TEST_SUITE=installation_iojs
-    - SHELL=zsh TEST_SUITE=installation_iojs WITHOUT_CURL=1
-  #  - SHELL=ksh TEST_SUITE=installation_iojs
-  #  - SHELL=ksh TEST_SUITE=installation_iojs WITHOUT_CURL=1
+matrix:
+  include:
+    - env: MAKE_RELEASE=true
+      sudo: false
+    - env: DOCTOCCHECK=true
+      sudo: false
+    - env: SHELLCHECK=true
+      sudo: false
+    - env: SHELL=bash TEST_SUITE=install_script
+      sudo: false
+    - env: SHELL=sh TEST_SUITE=fast
+    - env: SHELL=dash TEST_SUITE=fast
+    - env: SHELL=bash TEST_SUITE=fast
+    - env: SHELL=zsh TEST_SUITE=fast
+  #  - env: SHELL=ksh TEST_SUITE=fast
+    - env: SHELL=sh TEST_SUITE=sourcing
+      sudo: false
+    - env: SHELL=dash TEST_SUITE=sourcing
+      sudo: false
+    - env: SHELL=bash TEST_SUITE=sourcing
+      sudo: false
+    - env: SHELL=zsh TEST_SUITE=sourcing
+      sudo: false
+  #  - env: SHELL=ksh TEST_SUITE=sourcing
+      sudo: false
+    - env: SHELL=sh TEST_SUITE=slow
+    - env: SHELL=dash TEST_SUITE=slow
+    - env: SHELL=bash TEST_SUITE=slow
+    - env: SHELL=zsh TEST_SUITE=slow
+  #  - env: SHELL=ksh TEST_SUITE=slow
+    - env: SHELL=sh TEST_SUITE=installation_node
+      sudo: false
+    - env: SHELL=sh TEST_SUITE=installation_node WITHOUT_CURL=1
+    - env: SHELL=dash TEST_SUITE=installation_node
+      sudo: false
+    - env: SHELL=dash TEST_SUITE=installation_node WITHOUT_CURL=1
+    - env: SHELL=bash TEST_SUITE=installation_node
+      sudo: false
+    - env: SHELL=bash TEST_SUITE=installation_node WITHOUT_CURL=1
+    - env: SHELL=zsh TEST_SUITE=installation_node
+      sudo: false
+    - env: SHELL=zsh TEST_SUITE=installation_node WITHOUT_CURL=1
+  #  - env: SHELL=ksh TEST_SUITE=installation_node
+  #    sudo: false
+  #  - env: SHELL=ksh TEST_SUITE=installation_node WITHOUT_CURL=1
+    - env: SHELL=sh TEST_SUITE=installation_iojs
+      sudo: false
+    - env: SHELL=sh TEST_SUITE=installation_iojs WITHOUT_CURL=1
+    - env: SHELL=dash TEST_SUITE=installation_iojs
+      sudo: false
+    - env: SHELL=dash TEST_SUITE=installation_iojs WITHOUT_CURL=1
+    - env: SHELL=bash TEST_SUITE=installation_iojs
+      sudo: false
+    - env: SHELL=bash TEST_SUITE=installation_iojs WITHOUT_CURL=1
+    - env: SHELL=zsh TEST_SUITE=installation_iojs
+      sudo: false
+    - env: SHELL=zsh TEST_SUITE=installation_iojs WITHOUT_CURL=1
+  #  - env: SHELL=ksh TEST_SUITE=installation_iojs
+  #    sudo: false
+  #  - env: SHELL=ksh TEST_SUITE=installation_iojs WITHOUT_CURL=1
