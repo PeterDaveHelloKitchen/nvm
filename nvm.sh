@@ -1704,7 +1704,7 @@ nvm_install_binary() {
   if [ "${FLAVOR}" = 'node' ]; then
     NODE_OR_IOJS="${FLAVOR}"
   fi
-  if [ -n "${NVM_NO_PROGRESS}" ]; then
+  if [ "${NVM_NO_PROGRESS-}" = "1" ]; then
     PROGRESS_BAR="-sS"
   else
     PROGRESS_BAR="--progress-bar"
@@ -2014,7 +2014,7 @@ nvm_install_source() {
   local TMPDIR
   local VERSION_PATH
 
-  if [ -n "${NVM_NO_PROGRESS}" ]; then
+  if [ "${NVM_NO_PROGRESS-}" = "1" ]; then
     PROGRESS_BAR="-sS"
   else
     PROGRESS_BAR="--progress-bar"
@@ -2478,6 +2478,7 @@ nvm() {
       local nobinary
       local noprogress
       nobinary=0
+      noprogress=0
       local LTS
       local NVM_UPGRADE_NPM
       NVM_UPGRADE_NPM=0
