@@ -9,7 +9,7 @@ VERSION_PATH="$(nvm_version_path "${VERSION}")"
 
 succeed() {
   nvm_echo "$@"
-  NVM_INSTALL_THIRD_PARTY_HOOK= nvm install "${VERSION}"
+  NVM_INSTALL_THIRD_PARTY_HOOK=nvm install "${VERSION}"
 }
 
 fail() {
